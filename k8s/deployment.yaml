@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: laravel
-          image: laravel-k8s-app:v4
+          image: laravel-k8s-app:v5
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

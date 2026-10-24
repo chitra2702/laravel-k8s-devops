@@ -30,7 +30,7 @@ WORKDIR /var/www/html
 
 COPY --from=vendor /app /var/www/html
 
-RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache database
 
 EXPOSE 80
 
