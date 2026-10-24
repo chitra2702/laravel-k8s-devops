@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,80 +6,143 @@
     <title>Support Desk</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f3f5f9;
-            color: #202938;
-            margin: 0;
-            padding: 35px 16px;
+        :root {
+            --bg: #f1f4f9;
+            --card: #ffffff;
+            --text: #1e2735;
+            --muted: #6b7686;
+            --border: #e3e8ef;
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
         }
 
-        .container {
-            max-width: 900px;
-            margin: auto;
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
         }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff;
+            padding: 40px 16px 70px;
+        }
+
+        .header-inner, .container { max-width: 880px; margin: 0 auto; }
+        .header h1 { margin: 0 0 6px; font-size: 30px; }
+        .header p  { margin: 0; opacity: .85; }
+
+        .container { padding: 0 16px 40px; margin-top: -40px; }
 
         .panel {
-            background: white;
-            padding: 24px;
-            margin-bottom: 24px;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px #0000000a;
+            background: var(--card);
+            padding: 26px;
+            margin-bottom: 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(30, 39, 53, .08);
         }
+
+        .panel h2 { margin-top: 0; font-size: 20px; }
+
+        label { font-size: 14px; font-weight: 600; color: var(--muted); }
 
         input, textarea, select, button {
-            box-sizing: border-box;
             font: inherit;
-            padding: 11px;
-            border: 1px solid #d5dbe5;
-            border-radius: 6px;
+            padding: 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
         }
 
-        input, textarea, .full {
-            width: 100%;
-            margin: 7px 0 14px;
+        input, textarea { width: 100%; margin: 6px 0 16px; }
+        input:focus, textarea:focus, select:focus {
+            outline: 2px solid #c7d2fe;
+            border-color: var(--primary);
         }
+
+        .form-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 
         button {
-            background: #2458d3;
-            color: white;
+            background: var(--primary);
+            color: #fff;
             border: none;
             cursor: pointer;
+            font-weight: 600;
         }
+        button:hover { background: var(--primary-dark); }
 
         .ticket {
-            border-top: 1px solid #e5e7eb;
-            padding: 18px 0;
+            border-top: 1px solid var(--border);
+            padding: 20px 0;
         }
+        .ticket:first-of-type { border-top: none; }
+        .ticket h3 { margin: 0 0 6px; font-size: 17px; }
+        .ticket p  { margin: 6px 0; }
 
-        .meta {
-            color: #626d7d;
-            font-size: 14px;
-        }
+        .meta { color: var(--muted); font-size: 13px; margin-top: 10px; }
 
-        .success {
-            background: #e4f8eb;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 18px;
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-right: 6px;
         }
+        .priority-low    { background: #dcfce7; color: #166534; }
+        .priority-medium { background: #fef9c3; color: #854d0e; }
+        .priority-high   { background: #fee2e2; color: #991b1b; }
 
-        .error {
-            color: #c62828;
-        }
+        .status-open        { background: #dbeafe; color: #1e40af; }
+        .status-in_progress { background: #ffedd5; color: #9a3412; }
+        .status-resolved    { background: #dcfce7; color: #166534; }
 
         .status-form {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-top: 12px;
+            align-items: center;
+            margin-top: 14px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .error { color: #b91c1c; background: #fef2f2; }
+        .error ul { margin: 0; padding-left: 20px; }
+
+        .empty { color: var(--muted); text-align: center; padding: 20px 0; }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            padding-bottom: 30px;
+        }
+        .footer code {
+            background: #e8ecf4;
+            padding: 2px 8px;
+            border-radius: 6px;
         }
     </style>
 </head>
 <body>
+
+<div class="header">
+    <div class="header-inner">
+        <h1>Support Desk</h1>
+        <p>Manage support tickets in one place.</p>
+    </div>
+</div>
+
 <div class="container">
-    <h1>Support Desk</h1>
-    <p>Manage support tickets in one place.</p>
 
     @if (session('success'))
         <div class="success">{{ session('success') }}</div>
@@ -110,14 +172,16 @@
             <textarea id="description" name="description" rows="4"
                       required placeholder="Describe the problem">{{ old('description') }}</textarea>
 
-            <label for="priority">Priority</label>
-            <select id="priority" name="priority">
-                <option value="low">Low</option>
-                <option value="medium" selected>Medium</option>
-                <option value="high">High</option>
-            </select>
+            <div class="form-row">
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                </select>
 
-            <button type="submit">Create ticket</button>
+                <button type="submit">Create ticket</button>
+            </div>
         </form>
     </div>
 
@@ -131,9 +195,13 @@
                 <p>{{ $ticket->description }}</p>
 
                 <p class="meta">
-                    Priority: <strong>{{ ucfirst($ticket->priority) }}</strong>
-                    · Status: <strong>{{ str_replace('_', ' ', ucfirst($ticket->status)) }}</strong>
-                    · Created: {{ $ticket->created_at->format('d M Y, H:i') }}
+                    <span class="badge priority-{{ $ticket->priority }}">
+                        {{ ucfirst($ticket->priority) }}
+                    </span>
+                    <span class="badge status-{{ $ticket->status }}">
+                        {{ str_replace('_', ' ', ucfirst($ticket->status)) }}
+                    </span>
+                    Created: {{ $ticket->created_at->format('d M Y, H:i') }}
                 </p>
 
                 <form class="status-form"
@@ -154,9 +222,14 @@
                 </form>
             </div>
         @empty
-            <p>No tickets yet. Create your first ticket above.</p>
+            <p class="empty">No tickets yet. Create your first ticket above.</p>
         @endforelse
     </div>
+
+    <div class="footer">
+        Served by pod: <code>{{ gethostname() }}</code>
+    </div>
+
 </div>
 </body>
 </html>
